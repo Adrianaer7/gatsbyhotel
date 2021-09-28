@@ -1,55 +1,67 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.com/docs/use-static-query/
- */
+import React from 'react';
+import { Helmet } from 'react-helmet';  //Esto me permite modificar el nombre de la pagina e importar fuentes, etc...
+import Header from './header';
+import Footer from './footer';
+import useSeo from "../hooks/use-seo"
+import { Global, css } from '@emotion/react';
 
-import * as React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+const Layout = (props) => {
 
-import Header from "./header"
-import "./layout.css"
+    const seo = useSeo()    //traigo del hook use-seo.js
 
-const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `)
+    const {fallbackSeo: {title, description}} = seo   //extraigo los valores que necesito
 
-  return (
-    <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`,
-          }}
-        >
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </footer>
-      </div>
-    </>
-  )
+
+    return ( 
+        <>
+            <Global
+               styles={css` //al ser Global, tengo que llamarlo por styles. Si es css, puedo llamarlo por css
+                    html {
+                        font-size: 62.5%;
+                        box-sizing: border-box; //esto y el before y after de abajo son para que las cards tengan el mismo margen de derecha e izquierda. Solucion encontrada en https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+                    }
+                    *, *:before, *:after {
+                    box-sizing: inherit;
+                    }
+                    body {
+                        font-size: 18px;
+                        font-size: 1.8rem;
+                        line-height: 1.5;
+                        font-family: "PT Sans", sans-serif;
+                    }
+                    h1, h2, h3 {
+                        margin: 0px;
+                        line-height: 1.5;
+                    }
+                    h1, h2 {
+                        font-family: "Roboto", serif;
+                    }
+                    h3 {
+                        font-family: "PT Sans", sans-serif;
+                    }
+                    ul {
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+                    }
+               `} 
+            />
+            <Helmet>
+                <title>{title}</title>
+                <meta name="description" content={description} />   {/*Muestra una descripcion en google de el contenido de la pagina */}
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet"/>
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
+                <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+            </Helmet>
+
+            <Header/>
+                {props.children}    {/*gracias a los props.children, todo lo que esté en este componente, se va a mostrar en el componente donde lo importemos */}
+            <Footer
+                title={title}
+            />
+        </>
+     );
 }
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
-
-export default Layout
+ 
+export default Layout;

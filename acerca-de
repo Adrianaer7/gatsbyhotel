@@ -1,0 +1,5 @@
+"npm i -g gatsby-cli" para instalar gatsby
+importo normalize y google fonts
+"npm i gatsby-plugin-emotion @emotion/react @emotion/styled" instala un plugin para que Gatsby soporte la libreria css de Emotion
+"npm i --save gatsby-background-image"   para traer a gatsby la imagen que consulto desde grapQL
+"npm i --save gatsby-source-datocms gatsby-plugin-image"    para traer a gatsby la info de datocms que le consulto en grapql 
